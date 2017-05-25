@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         mNumbersList.setAdapter(mAdapter);
         //  Use findViewById to store a reference to the RecyclerView in mNumbersList
 
-        // TODO (5) Create a LinearLayoutManager variable called layoutManager
+        //COMPLETED (5) Create a LinearLayoutManager variable called layoutManager
 
         // TODO (6) Use setLayoutManager on mNumbersList with the LinearLayoutManager we created above
 
