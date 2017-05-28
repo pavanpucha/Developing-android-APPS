@@ -38,7 +38,7 @@ import android.widget.TextView;
 public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHolder> {
 
     private static final String TAG = GreenAdapter.class.getSimpleName();
-
+    private static int viewHolderCount = 0;
     // TODO (8) Add a private static int called viewHolderCount that will hold the total number of ViewHolders that are created
 
     private int mNumberItems;
@@ -51,6 +51,7 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
      */
     public GreenAdapter(int numberOfItems) {
         mNumberItems = numberOfItems;
+        viewHolderCount = 0;
         // TODO (9) When a new GreenAdapter is created, set the viewHolderCount to 0
     }
     /**
