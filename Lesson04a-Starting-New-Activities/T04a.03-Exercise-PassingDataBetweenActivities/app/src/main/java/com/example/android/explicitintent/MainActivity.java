@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     /* Fields that will store our EditText and Button */
     private EditText mNameEntry;
     private Button mDoSomethingCoolButton;
+    public String retrieveMNameEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(View v) {
-                // TODO (1) Retrieve the text from the EditText and store it in a variable
+                // COMPLETED (1) Retrieve the text from the EditText and store it in a variable
 
                 /*
                  * Storing the Context in a variable in this case is redundant since we could have
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                  * clear as possible.
                  */
                 Context context = MainActivity.this;
-
+               retrieveMNameEntry = mNameEntry.getText().toString();
                 /* This is the class that we want to start (and open) when the button is clicked. */
                 Class destinationActivity = ChildActivity.class;
 
@@ -72,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
                  * context, which we stored in the variable named "context".
                  */
                 Intent startChildActivityIntent = new Intent(context, destinationActivity);
-
-                // TODO (2) Use the putExtra method to put the String from the EditText in the Intent
+                startChildActivityIntent.putExtra(Intent.EXTRA_TEXT,retrieveMNameEntry);
+                // COMPLETED (2) Use the putExtra method to put the String from the EditText in the Intent
 
                 /*
                  * Once the Intent has been created, we can use Activity's method, "startActivity"
