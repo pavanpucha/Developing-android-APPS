@@ -15,10 +15,14 @@
  */
 package com.example.android.implicitintents;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
+
+import static android.content.Intent.ACTION_VIEW;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,10 +39,11 @@ public class MainActivity extends AppCompatActivity {
      * @param v Button that was clicked.
      */
     public void onClickOpenWebpageButton(View v) {
-        // TODO (5) Create a String that contains a URL ( make sure it starts with http:// or https:// )
-
-        // TODO (6) Replace the Toast with a call to openWebPage, passing in the URL String from the previous step
-        Toast.makeText(this, "TODO: Open a web page when this button is clicked", Toast.LENGTH_SHORT).show();
+        // COMPLETED  Create a String that contains a URL ( make sure it starts with http:// or https:// )
+        String Uri1 = "https:/www.google.com";
+        openWebPage(Uri1);
+        // COMPLETED Replace the Toast with a call to openWebPage, passing in the URL String from the previous step
+       // Toast.makeText(this, "COMPLETED: Open a web page when this button is clicked", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -76,7 +81,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT)
                 .show();
     }
-
+    public void openWebPage(String Url){
+        Uri webpage = Uri.parse(Url);
+        Intent newIntent = new Intent(Intent.ACTION_VIEW,webpage);
+        startActivity(newIntent);
+    }
     // TODO (1) Create a method called openWebPage that accepts a String as a parameter
     // Do steps 2 - 4 within openWebPage
 
