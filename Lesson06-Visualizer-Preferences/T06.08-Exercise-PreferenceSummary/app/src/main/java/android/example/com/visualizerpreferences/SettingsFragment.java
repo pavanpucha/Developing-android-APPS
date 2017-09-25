@@ -24,22 +24,83 @@ import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
 // TODO (1) Implement OnSharedPreferenceChangeListener
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class SettingsFragment extends PreferenceFragmentCompat implements OnSharedPreferenceChangeListener {
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
 
         // Add visualizer preferences, defined in the XML file in res->xml->pref_visualizer
         addPreferencesFromResource(R.xml.pref_visualizer);
+        SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
+        PreferenceScreen preferenceScreen = getPreferenceScreen();
 
+        int preferenceCounts = preferenceScreen.getPreferenceCount();
+
+        for(int i=0;i<preferenceCounts;i++){
+            Preference p = preferenceScreen.getPreference(i);
+
+            if(!(p instanceof CheckBoxPreference)){
+                String value = sharedPreferences.getString(p.getKey(),"");
+                setPreferenceSummary(p,value);
+            }
+        }
         // TODO (3) Get the preference screen, get the number of preferences and iterate through
         // all of the preferences if it is not a checkbox preference, call the setSummary method
         // passing in a preference and the value of the preference
     }
+    /*
+    if the preference passed is an instance of list preference,
+    create a list preference and cast it to the input preference parameter
+
+    Then, get the index of the current preference  using findIndexOfValue
+
+     */
+    private void setPreferenceSummary(Preference p, String value) {
+        if( p instanceof ListPreference){
+            ListPreference listPreference = (ListPreference)p;
+
+            int prefIndex = listPreference.findIndexOfValue(value);
+            if(prefIndex   >=0 ){
+                listPreference.setSummary(listPreference.getEntries()[prefIndex]);
+            }
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+      // finding pref by key
+        //
+        Preference pref = findPreference(key);
+        // if pref is not null and is an instance of a checkbox preference,
+        //get value (convert the key to string)
+        // and set the preference summary
+        if(null!= pref){
+            if(!(pref instanceof CheckBoxPreference)){
+                String value = sharedPreferences.getString(pref.getKey(),"");
+                setPreferenceSummary(pref,value);
+            }
+        }
+
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
 
     // TODO (4) Override onSharedPreferenceChanged and, if it is not a checkbox preference,
     // call setPreferenceSummary on the changed preference

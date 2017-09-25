@@ -27,7 +27,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -61,8 +63,15 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
                 getResources().getBoolean(R.bool.pref_show_treble_default)));
         mVisualizerView.setMinSizeScale(1);
         loadColorFromPreferences(sharedPreferences);
+        loadSizeFromSharedPreference(sharedPreferences);
         // Register the listener
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+    private void loadSizeFromSharedPreference(SharedPreferences preferences){
+        float minSize = Float.parseFloat(preferences.getString(getString(R.string.pref_size_key),
+                getString(R.string.pref_size_default)));
+
+        mVisualizerView.setMinSizeScale(minSize);
     }
 
     private void loadColorFromPreferences(SharedPreferences sharedPreferences) {
@@ -82,6 +91,9 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
             mVisualizerView.setShowTreble(sharedPreferences.getBoolean(key, getResources().getBoolean(R.bool.pref_show_treble_default)));
         } else if (key.equals(getString(R.string.pref_color_key))) {
             loadColorFromPreferences(sharedPreferences);
+        }
+        else if(key.equals(getString(R.string.pref_size_key))){
+            loadSizeFromSharedPreference(sharedPreferences);
         }
     }
 

@@ -19,6 +19,7 @@ package android.example.com.visualizerpreferences;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.support.annotation.FloatRange;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.ListPreference;
@@ -29,7 +30,7 @@ import android.widget.Toast;
 
 
 public class SettingsFragment extends PreferenceFragmentCompat implements
-        OnSharedPreferenceChangeListener {
+        OnSharedPreferenceChangeListener , Preference.OnPreferenceChangeListener{
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -40,7 +41,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
         PreferenceScreen prefScreen = getPreferenceScreen();
         int count = prefScreen.getPreferenceCount();
-
+        Preference preference = findPreference(getString(R.string.pref_size_key));
+        preference.setOnPreferenceChangeListener(this);
         // Go through all of the preferences, and set up their preference summary.
         for (int i = 0; i < count; i++) {
             Preference p = prefScreen.getPreference(i);
@@ -81,6 +83,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             if (prefIndex >= 0) {
                 // Set the summary to that label
                 listPreference.setSummary(listPreference.getEntries()[prefIndex]);
+            } else if(preference instanceof EditTextPreference){
+                preference.setSummary(value);
             }
         }
     }
@@ -98,4 +102,26 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
-}
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        Toast errorToast = Toast.makeText(getContext()," Please select a value between 0.1 and 3.0", Toast.LENGTH_SHORT);
+        String sizeKey = getString(R.string.pref_size_key);
+        if(preference.getKey().equals(sizeKey)){
+            String stringSize = ((String) (newValue)).trim();
+            if(stringSize.equals("")) stringSize = "1";
+
+            try{
+                float size = Float.parseFloat(stringSize);
+                if(size > 3 || size <= 0){
+                    errorToast.show();
+                    return  false;
+                }}
+                catch(NumberFormatException e){
+                    e.printStackTrace();
+                    errorToast.show();
+                }
+            }
+            return  true;
+        }
+    }
